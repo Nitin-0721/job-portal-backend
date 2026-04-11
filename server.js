@@ -13,7 +13,10 @@ const app = express();
 
 // ── Middleware ──
 app.use(cors({
-  origin: "http://localhost:5173", // your Vite frontend
+  origin: [
+    "http://localhost:5173",
+    "https://job-portal-frontend-six-beryl.vercel.app"
+  ],
   credentials: true,
 }));
 app.use(express.json());
