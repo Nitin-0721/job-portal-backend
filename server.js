@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
 require("dotenv").config();
 
 const userRoutes = require("./routes/userRoutes");
@@ -23,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Serve uploaded resumes as static files ──
-// Create folder if it doesn't exist
 const resumeDir = path.join(__dirname, "uploads/resumes");
 if (!fs.existsSync(resumeDir)) {
   fs.mkdirSync(resumeDir, { recursive: true });
@@ -58,7 +58,19 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✓ MongoDB connected");
-    app.listen(PORT, () => console.log(`✓ Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`✓ Server running on port ${PORT}`);
+
+      // Keep Render awake — ping every 14 minutes
+      setInterval(() => {
+        https.get("https://job-portal-8u8m.onrender.com/", (res) => {
+          console.log("Keep-alive ping:", res.statusCode);
+        }).on("error", (err) => {
+          console.log("Keep-alive error:", err.message);
+        });
+      }, 14 * 60 * 1000);
+
+    });
   })
   .catch((err) => {
     console.error("✗ MongoDB connection failed:", err.message);
