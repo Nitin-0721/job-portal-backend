@@ -26,32 +26,28 @@ const userSchema = new mongoose.Schema(
       default: "student",
     },
 
-    // ── Student Profile Fields ──
+    // Student Profile Fields
     phone: { type: String, default: "" },
     location: { type: String, default: "" },
     bio: { type: String, default: "" },
-
-    // Education
     degree: { type: String, default: "" },
     branch: { type: String, default: "" },
     college: { type: String, default: "" },
     graduationYear: { type: String, default: "" },
     cgpa: { type: String, default: "" },
-
-    // Skills
     skills: [{ type: String }],
-
-    // Resume
-    resume: { type: String, default: "" }, // file path
-
-    // Social Links
+    resume: { type: String, default: "" },
     linkedin: { type: String, default: "" },
     github: { type: String, default: "" },
     portfolio: { type: String, default: "" },
 
-    // ── Recruiter Fields ──
+    // Recruiter Fields
     companyName: { type: String, default: "" },
     companyWebsite: { type: String, default: "" },
+
+    // Password Reset Fields
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date },
   },
   { timestamps: true }
 );
@@ -62,7 +58,7 @@ userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// Compare password method
+// Compare password
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
