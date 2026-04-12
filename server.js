@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://job-portal-frontend-six-beryl.vercel.app"
+    "https://joborbit.vercel.app"
   ],
   credentials: true,
 }));
